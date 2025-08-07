@@ -21,11 +21,16 @@ variable "ssh_cidr" {
   description = "Your home IP in CIDR notation"
 }
 
-# name of the ssh key you will be generating
-variable "ssh_key_name" {
-  type        = string
-  description = "Name of your ssh key"
+variable "ssh_public_key_path" {
+  type = string
+  description = "Absolute path to your SSH public key"
 }
+
+# name of the ssh key you will be generating
+# variable "ssh_key_name" {
+#   type        = string
+#   description = "Name of your ssh key"
+# }
 
 # The provider of your cloud service, in this case it is AWS. 
 provider "aws" {
@@ -80,7 +85,7 @@ data "aws_ami" "al2023" {
 
 resource "aws_key_pair" "test-key" {
   key_name   = "test-key"
-  public_key = file("./${var.ssh_key_name}.pub")
+  public_key = file(var.ssh_public_key_path)
 }
 
 output "ec2_public_dns" {
